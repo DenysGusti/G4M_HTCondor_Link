@@ -7,6 +7,10 @@ from auxiliary_functions import calculateTime
 
 
 class LocalTesting:
+    """
+    Running G4M on local PC
+    """
+
     def __init__(self, folder: Path, g4m_executable: Path, tasks: list[str]):
         self.folder: Path = folder
         self.g4m_executable: Path = g4m_executable
@@ -27,5 +31,9 @@ class LocalTesting:
             run([self.g4m_executable, *words], stdout=file)
 
     def moveFiles(self, words: list[str]) -> None:
+        """
+        Moving the BAU files created under zero CO2 price scenarios
+        to the input data folder for running the non-zero CO2 price scenarios
+        """
         for x in ['biomass_bau', 'NPVbau']:
             move(self.folder / 'out' / f'{x}_{words[0]}_{words[2]}.bin', self.folder / f'{x}_{words[0]}_{words[2]}.bin')

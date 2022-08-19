@@ -4,6 +4,10 @@ from pathlib import Path
 
 
 class DataExtractionTaskCreation:
+    """
+    Preparing the input data and scenario list for running G4M
+    """
+
     def __init__(self, csv_file: Path, *, project_name: str, keyword: str):
         self.csv_file: Path = csv_file
         self.project_name: str = project_name

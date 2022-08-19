@@ -9,11 +9,11 @@ class FileManagement:
         self.folder: Path = folder
         self.project_name: str = project_name
 
-        self.data_folder: Path = self.folder / 'data'
-        self.out_folder: Path = self.folder / 'out' / 'cell'
+        self.data_folder: Path = self.folder / 'data' # input data folder
+        self.out_folder: Path = self.folder / 'out' / 'cell' # output data folder
 
-        self.default_data_archive: Path = self.data_folder / f'data_{self.project_name}.zip'
-        self.bau_data_archive: Path = self.out_folder / f'bau_data_{self.project_name}.zip'
+        self.default_data_archive: Path = self.data_folder / f'data_{self.project_name}.zip' # zipping the input data
+        self.bau_data_archive: Path = self.out_folder / f'bau_data_{self.project_name}.zip' # zipping the BAU data
 
     @staticmethod
     def archive(files: list[Path], dst_folder: Path, archive: Path) -> None:
