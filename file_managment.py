@@ -5,19 +5,24 @@ from auxiliary_functions import calculateTime
 
 
 class FileManagement:
-    def __init__(self, folder: Path, project_name: str):
-        self.folder: Path = folder
+    def __init__(self, project_name: str, data_folder: Path, out_folder: Path):
         self.project_name: str = project_name
 
-        self.data_folder: Path = self.folder / 'data' # input data folder
-        self.out_folder: Path = self.folder / 'out' / 'cell' # output data folder
+        self.data_folder: Path = data_folder  # input data folder
+        self.out_folder: Path = out_folder  # output data folder
 
-        self.default_data_archive: Path = self.data_folder / f'data_{self.project_name}.zip' # zipping the input data
-        self.bau_data_archive: Path = self.out_folder / f'bau_data_{self.project_name}.zip' # zipping the BAU data
+        if not self.out_folder.exists():
+            self.out_folder.mkdir(parents=True)
+
+        self.default_data_archive: Path = self.data_folder / f'data_{self.project_name}.zip'  # zipping the input data
+        self.bau_data_archive: Path = self.out_folder / f'bau_data_{self.project_name}.zip'  # zipping the BAU data
+
+        print(self.default_data_archive, self.bau_data_archive)
 
     @staticmethod
     def archive(files: list[Path], dst_folder: Path, archive: Path) -> None:
         tmp_folder: Path = dst_folder / 'tmp'
+        print('compressing files:', *files, sep='\n')
 
         try:
             tmp_folder.mkdir()
@@ -33,7 +38,6 @@ class FileManagement:
     @calculateTime
     def archiveDefaultData(self) -> 'FileManagement':
         files: list[Path] = [f for d in self.data_folder.iterdir() if d.is_dir() for f in d.iterdir() if f.is_file()]
-        print(*files, sep='\n')
 
         self.archive(files, self.data_folder, self.default_data_archive)
 
@@ -42,16 +46,18 @@ class FileManagement:
     @calculateTime
     def archiveBauData(self) -> 'FileManagement':
         files: list[Path] = [f for f in self.out_folder.iterdir() if f.is_file() and f.suffix == '.bin']
-        print(*files, sep='\n')
+
+        if not files:
+            raise Exception('bauData was not found!')
 
         self.archive(files, self.out_folder, self.bau_data_archive)
 
         return self
 
     @property
-    def defaultData(self) -> Path:
-        return self.default_data_archive
+    def defaultData(self) -> str:
+        return self.default_data_archive.name
 
     @property
-    def bauData(self) -> Path:
-        return self.bau_data_archive
+    def bauData(self) -> str:
+        return self.bau_data_archive.name
