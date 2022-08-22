@@ -31,3 +31,18 @@ FILE_ARCHIVER: Path = WORKING_DIRECTORY / '7za.exe'
 
 SCENARIOS_DATA: Path = WORKING_DIRECTORY / 'data_files'
 CONDOR_OUTPUT_FOLDER: Path = Path(r'out\cell')
+
+JOB_TEMPLATE: dict[str, str | int] = {
+    'notification': 'Error',
+    'job_machine_attrs': 'Machine',
+    'job_machine_attrs_history_length': 5,
+    'request_memory': '2GB',
+    'request_cpus': 1,
+    'request_disk': '1.5GB',
+    'rank': 'mips',
+    'periodic_hold': '(JobStatus == 7)',
+    'periodic_release': '(NumJobStarts <= 10) && (HoldReasonCode != 1) && ((time() - EnteredCurrentStatus) > 300)',
+    'job_lease_duration': 7200,
+    'on_exit_remove': '(ExitBySignal == False) && (ExitCode == 0)',
+    'on_exit_hold': '(NumJobStarts > 10) && (ExitCode != 0)'
+}
