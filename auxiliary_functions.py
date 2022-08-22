@@ -1,5 +1,6 @@
 from time import perf_counter, sleep
 from subprocess import run
+from pathlib import Path
 
 
 def calculateTime(func):

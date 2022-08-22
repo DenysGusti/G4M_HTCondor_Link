@@ -18,8 +18,8 @@ def main() -> None:
     if RUN_CONDOR:
         checkCondorStatus()
 
-        files: FileManagement = FileManagement(PROJECT_NAME, SCENARIOS_DATA,
-                                               WORKING_DIRECTORY / CONDOR_OUTPUT_FOLDER).archiveDefaultData()
+        files: FileManagement = FileManagement(PROJECT_NAME, SCENARIOS_DATA, WORKING_DIRECTORY / CONDOR_OUTPUT_FOLDER,
+                                               cwd=WORKING_DIRECTORY).archiveDefaultData()
 
         bat_0: BatCreator = BatCreator(file_name=EXECUTABLE_0, output_folder=CONDOR_OUTPUT_FOLDER,
                                        file_archiver=FILE_ARCHIVER.name,
@@ -30,8 +30,14 @@ def main() -> None:
         job_0: Job = Job(f'{PROJECT_NAME}_0', EXECUTABLE_0.name, submit_folder=SUBMIT_FOLDER,
                          arguments=[x for x in tasks if int(x[-2:]) == 0],
                          should_transfer_files='YES', transfer_output_files=['out'],
-                         transfer_input_files=[files.defaultData, G4M_GLOBAL_EXE.name,
-                                               FILE_ARCHIVER.name]).build().submit()
+                         transfer_input_files=[files.defaultData, G4M_GLOBAL_EXE.name, FILE_ARCHIVER.name],
+                         notification='Error', job_machine_attrs='Machine', job_machine_attrs_history_length=5,
+                         request_memory='2GB', request_cpus=1, request_disk='1.5GB', rank='mips',
+                         periodic_hold='(JobStatus == 7)',
+                         periodic_release='(NumJobStarts <= 10) && (HoldReasonCode != 1) &&'
+                                          '((time() - EnteredCurrentStatus) > 300)',
+                         job_lease_duration=7200, on_exit_remove='(ExitBySignal == False) && (ExitCode == 0)',
+                         on_exit_hold='(NumJobStarts > 10) && (ExitCode != 0)').build().submit(cwd=WORKING_DIRECTORY)
         print(job_0)
 
         checkRunningJobs(user='denys', update_s=60)
@@ -47,8 +53,15 @@ def main() -> None:
         job_1: Job = Job(f'{PROJECT_NAME}_1', EXECUTABLE_1.name, submit_folder=SUBMIT_FOLDER,
                          arguments=[x for x in tasks if int(x[-2:]) == -1],
                          should_transfer_files='YES', transfer_output_files=['out'],
-                         transfer_input_files=[files.defaultData, files.bauData,
-                                               G4M_GLOBAL_EXE.name, FILE_ARCHIVER.name]).build().submit()
+                         transfer_input_files=[files.defaultData, files.bauData, G4M_GLOBAL_EXE.name,
+                                               FILE_ARCHIVER.name],
+                         notification='Error', job_machine_attrs='Machine', job_machine_attrs_history_length=5,
+                         request_memory='2GB', request_cpus=1, request_disk='1.5GB', rank='mips',
+                         periodic_hold='(JobStatus == 7)',
+                         periodic_release='(NumJobStarts <= 10) && (HoldReasonCode != 1) &&'
+                                          '((time() - EnteredCurrentStatus) > 300)',
+                         job_lease_duration=7200, on_exit_remove='(ExitBySignal == False) && (ExitCode == 0)',
+                         on_exit_hold='(NumJobStarts > 10) && (ExitCode != 0)').build().submit(cwd=WORKING_DIRECTORY)
         print(job_1)
 
 

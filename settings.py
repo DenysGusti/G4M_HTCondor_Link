@@ -24,8 +24,8 @@ RUN_CONDOR: bool = True
 # Names of the bat files used by HTCondor
 SUBMIT_FOLDER: Path = WORKING_DIRECTORY / 'submit_folder'
 
-EXECUTABLE_0: Path = Path(f'{PROJECT_NAME}_0.bat')
-EXECUTABLE_1: Path = Path(f'{PROJECT_NAME}_1.bat')
+EXECUTABLE_0: Path = WORKING_DIRECTORY / f'{PROJECT_NAME}_0.bat'
+EXECUTABLE_1: Path = WORKING_DIRECTORY / f'{PROJECT_NAME}_1.bat'
 
 FILE_ARCHIVER: Path = WORKING_DIRECTORY / '7za.exe'
 

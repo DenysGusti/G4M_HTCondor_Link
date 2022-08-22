@@ -1,15 +1,16 @@
 from pathlib import Path
-from shutil import make_archive, copy
+from shutil import make_archive, copy, move
 
 from auxiliary_functions import calculateTime
 
 
 class FileManagement:
-    def __init__(self, project_name: str, data_folder: Path, out_folder: Path):
+    def __init__(self, project_name: str, data_folder: Path, out_folder: Path, cwd: Path):
         self.project_name: str = project_name
 
         self.data_folder: Path = data_folder  # input data folder
         self.out_folder: Path = out_folder  # output data folder
+        self.cwd = cwd
 
         if not self.out_folder.exists():
             self.out_folder.mkdir(parents=True)
@@ -30,6 +31,9 @@ class FileManagement:
                 copy(f, tmp_folder)
             make_archive(str(archive).split('.')[0], archive.suffix[1:], tmp_folder)
 
+        except KeyboardInterrupt:
+            archive.unlink()
+
         finally:
             for f in tmp_folder.iterdir():
                 f.unlink()
@@ -41,6 +45,9 @@ class FileManagement:
 
         self.archive(files, self.data_folder, self.default_data_archive)
 
+        move(self.default_data_archive, self.cwd / self.default_data_archive.name)
+        self.default_data_archive = self.cwd / self.default_data_archive.name
+
         return self
 
     @calculateTime
@@ -51,6 +58,9 @@ class FileManagement:
             raise Exception('bauData was not found!')
 
         self.archive(files, self.out_folder, self.bau_data_archive)
+
+        move(self.bau_data_archive, self.cwd / self.bau_data_archive.name)
+        self.bau_data_archive = self.cwd / self.bau_data_archive.name
 
         return self
 
