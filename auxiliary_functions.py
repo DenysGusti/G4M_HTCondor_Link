@@ -1,6 +1,5 @@
 from time import perf_counter, sleep
 from subprocess import run
-from pathlib import Path
 
 
 def calculateTime(func):
@@ -14,6 +13,7 @@ def calculateTime(func):
 
 
 def checkRunningJobs(user: str, update_s: int) -> None:
+    print('checking jobs...')
     while True:
         sleep(update_s)
         msg: str = run(['condor_q'], capture_output=True, text=True).stdout

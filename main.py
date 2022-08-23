@@ -52,6 +52,8 @@ def main() -> None:
                          **JOB_TEMPLATE).build().submit(cwd=WORKING_DIRECTORY)
         print(job_1)
 
+        checkRunningJobs(user=USER, update_s=UPDATE_TIME)
+
 
 if __name__ == '__main__':
     main()
