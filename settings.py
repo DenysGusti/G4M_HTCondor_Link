@@ -1,14 +1,11 @@
 from pathlib import Path
 
 # G4M Project folder (where the g4m.exe and input data/folders are)
-WORKING_DIRECTORY: Path = Path(r'C:\Users\denys\PycharmProjects\G4M_HTCondor_Link\data')
-
+# WORKING_DIRECTORY: Path = Path(r'C:\Users\denys\PycharmProjects\G4M_HTCondor_Link\data')
+WORKING_DIRECTORY: Path = Path(r'D:\MGusti\CurrentWork\GFM\georgPrgs\dima\DeforAforCCurves_growth\ManagementPlus\GUI'
+                               r'\progr_no_interpol\newAgeStruct\newInterfase_codeTest\data')
 # Name of the scenario project
 PROJECT_NAME: str = 'AEO2022_28042022'
-
-# Name of GLOBIOM file variable from which the scenarios for running G4M are taken
-VARIABLE: str = 'LandRent'
-CSV_FILE: Path = WORKING_DIRECTORY / f'GLOBIOM2G4M_output_{VARIABLE}_{PROJECT_NAME}.csv'
 
 # Keyword in the scenarios for finding the BAU (zero CO2 price) scenarios
 KEYWORD: str = 'FOR000'  # something that is in name of base scenarios but isn't in name of others
@@ -29,8 +26,15 @@ EXECUTABLE_1: Path = WORKING_DIRECTORY / f'{PROJECT_NAME}_1.bat'
 
 FILE_ARCHIVER: Path = WORKING_DIRECTORY / '7za.exe'
 
-SCENARIOS_DATA: Path = WORKING_DIRECTORY / 'data_files'
+SCENARIOS_DATA: Path = WORKING_DIRECTORY / 'data_all'
 CONDOR_OUTPUT_FOLDER: Path = Path(r'out\cell')
+
+# Name of GLOBIOM file variable from which the scenarios for running G4M are taken
+VARIABLE: str = 'LandRent'
+CSV_FILE: Path = SCENARIOS_DATA / 'project_data' / f'GLOBIOM2G4M_output_{VARIABLE}_{PROJECT_NAME}.csv'
+
+USER: str = 'gusti'
+UPDATE_TIME: int = 60
 
 JOB_TEMPLATE: dict[str, str | int] = {
     'notification': 'Error',

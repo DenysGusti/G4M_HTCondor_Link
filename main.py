@@ -34,7 +34,7 @@ def main() -> None:
                          **JOB_TEMPLATE).build().submit(cwd=WORKING_DIRECTORY)
         print(job_0)
 
-        checkRunningJobs(user='denys', update_s=60)
+        checkRunningJobs(user=USER, update_s=UPDATE_TIME)
 
         files.archiveBauData()
 
