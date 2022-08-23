@@ -8,7 +8,8 @@ WORKING_DIRECTORY: Path = Path(r'D:\MGusti\CurrentWork\GFM\georgPrgs\dima\DeforA
 PROJECT_NAME: str = 'AEO2022_28042022'
 
 # Keyword in the scenarios for finding the BAU (zero CO2 price) scenarios
-KEYWORD: str = 'FOR000'  # something that is in name of base scenarios but isn't in name of others
+# something that is in the names of BAU (zero CO2 price) scenarios but isn't in the names of the other scenarios
+KEYWORD: str = 'FOR000'
 
 # Name of the G4M executable
 G4M_GLOBAL_EXE: Path = WORKING_DIRECTORY / 'g4m_global_AEO2022_28042022.exe'

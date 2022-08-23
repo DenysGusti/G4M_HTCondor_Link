@@ -19,7 +19,7 @@ def checkRunningJobs(user: str, update_s: int) -> None:
         msg: str = run(['condor_q'], capture_output=True, text=True).stdout
         jobs_status: list[str] = [x for x in msg.split('\n') if f'Total for {user}' in x][0].split(', ')
         if int(jobs_status[2].split()[0]) > 0 or int(jobs_status[4].split()[0]) > 0:
-            print('please check jobs! problems are possible!')
+            print('Please check the jobs on condor! The jobs are idle or held!')
         if int(jobs_status[3].split()[0]) == 0:
             break
 
@@ -29,4 +29,4 @@ def checkCondorStatus() -> None:
     print(msg)
 
     if not msg:
-        raise Exception('check condor status!')
+        raise Exception('Check condor status! Probably, condor server is not available')
