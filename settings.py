@@ -16,7 +16,7 @@ G4M_GLOBAL_EXE: Path = WORKING_DIRECTORY / 'g4m_global_AEO2022_28042022.exe'
 
 # Do you run the model on local PC or on HTCondor?
 TEST_ON_LOCAL: bool = False
-RUN_CONDOR: bool = True
+RUN_CONDOR: bool = False
 
 # HTCondor
 # Names of the bat files used by HTCondor
@@ -52,3 +52,6 @@ JOB_TEMPLATE: dict[str, str | int] = {
     'on_exit_remove': '(ExitBySignal == False) && (ExitCode == 0)',
     'on_exit_hold': '(NumJobStarts > 10) && (ExitCode != 0)'
 }
+
+MERGE_EXE: Path = WORKING_DIRECTORY / 'tableMerge_EPA_csv_linker_new.exe'
+MERGE_OUT: Path = WORKING_DIRECTORY / 'merged'

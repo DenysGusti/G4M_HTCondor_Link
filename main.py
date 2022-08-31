@@ -5,15 +5,16 @@ from local_testing import LocalTesting
 from file_managment import FileManagement
 from py_condor import Job
 from bat_creation import BatCreator
+from cpp_merger import Merger
 
 
 @calculateTime
 def main() -> None:
     data: DataExtractionTaskCreation = DataExtractionTaskCreation(CSV_FILE, project_name=PROJECT_NAME, keyword=KEYWORD)
-    tasks: list[str] = data.tasks
+    print(data)
 
     if TEST_ON_LOCAL:
-        LocalTesting(folder=WORKING_DIRECTORY, g4m_executable=G4M_GLOBAL_EXE, tasks=tasks)
+        LocalTesting(folder=WORKING_DIRECTORY, g4m_executable=G4M_GLOBAL_EXE, tasks=data.tasks)
 
     if RUN_CONDOR:
         checkCondorStatus()
@@ -28,7 +29,7 @@ def main() -> None:
         print(bat_0)
 
         job_0: Job = Job(f'{PROJECT_NAME}_0', EXECUTABLE_0.name, submit_folder=SUBMIT_FOLDER,
-                         arguments=[x for x in tasks if int(x[-2:]) == 0],
+                         arguments=[x for x in data.tasks if int(x[-2:]) == 0],
                          should_transfer_files='YES', transfer_output_files=['out'],
                          transfer_input_files=[files.defaultData, G4M_GLOBAL_EXE.name, FILE_ARCHIVER.name],
                          **JOB_TEMPLATE).build().submit(cwd=WORKING_DIRECTORY)
@@ -45,7 +46,7 @@ def main() -> None:
         print(bat_1)
 
         job_1: Job = Job(f'{PROJECT_NAME}_1', EXECUTABLE_1.name, submit_folder=SUBMIT_FOLDER,
-                         arguments=[x for x in tasks if int(x[-2:]) == -1],
+                         arguments=[x for x in data.tasks if int(x[-2:]) == -1],
                          should_transfer_files='YES', transfer_output_files=['out'],
                          transfer_input_files=[files.defaultData, files.bauData, G4M_GLOBAL_EXE.name,
                                                FILE_ARCHIVER.name],
@@ -53,6 +54,11 @@ def main() -> None:
         print(job_1)
 
         checkRunningJobs(user=USER, update_s=UPDATE_TIME)
+
+    merger: Merger = Merger(project_name=PROJECT_NAME, merge_exe=MERGE_EXE,
+                            inpath=WORKING_DIRECTORY / CONDOR_OUTPUT_FOLDER, outpath=MERGE_OUT,
+                            work_dir=WORKING_DIRECTORY, tasks=data.cpp_tasks).merge()
+    print(merger)
 
 
 if __name__ == '__main__':
