@@ -16,7 +16,7 @@ class Job:
                  periodic_hold: str = None, periodic_release: str = None, job_lease_duration: int = None,
                  on_exit_remove: str = None, on_exit_hold: str = None,
                  transfer_input_files: list[Path | str] = None, transfer_output_files: list[Path | str] = None,
-                 arguments: list[str] = None, queue: int = None):
+                 arguments: list[str] = None, queue: int = None, **kwargs):
         self.name: str = name
         self.executable: Path | str = executable
         self.submit_folder: Path = submit_folder
@@ -48,6 +48,9 @@ class Job:
         self.lines: list[str] = []
         self.submit_file: Path = Path()
 
+        print('Not processed arguments: ', kwargs)
+        self.kwargs: dict = kwargs
+
     def build(self) -> 'Job':
         files_name: str = f'{self.name}_{datetime.now():%d%m%Y}.$(Cluster).$(Process)'
         self.lines += [f'{x} = {self.submit_folder / x / f"{files_name}.{x[:3]}"}' for x in ['output', 'log', 'error']]
@@ -66,6 +69,9 @@ class Job:
                                    'transfer_input_files', 'transfer_output_files']
         self.lines += [f'{x} = {", ".join(str(y) for y in arg) if isinstance(arg := getattr(self, x), list) else arg}'
                        for x in submit_attrs if getattr(self, x)]
+        # unprocessed arguments
+        self.lines += [f'{key} = {", ".join(str(y) for y in value) if isinstance(value, list) else value}'
+                       for key, value in self.kwargs.items()]
 
         delim: str = '\n\t'
         self.lines.append(f'\nqueue {self.queue if self.queue else 1} args from (\n\t{delim.join(self.arguments)}\n)')

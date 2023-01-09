@@ -5,7 +5,7 @@ WORKING_DIRECTORY: Path = Path(r'C:\Users\denys\PycharmProjects\G4M_HTCondor_Lin
 # WORKING_DIRECTORY: Path = Path(r'D:\MGusti\CurrentWork\GFM\georgPrgs\dima\DeforAforCCurves_growth\ManagementPlus\GUI'
 #                                r'\progr_no_interpol\newAgeStruct\newInterfase_codeTest\data')
 # Name of the scenario project
-PROJECT_NAME: str = 'AEO2022_28042022'
+PROJECT_NAME: str = 'AEO2022_32052022'
 
 # Keyword in the scenarios for finding the BAU (zero CO2 price) scenarios
 # something that is in the names of BAU (zero CO2 price) scenarios but isn't in the names of the other scenarios
@@ -27,18 +27,18 @@ EXECUTABLE_1: Path = WORKING_DIRECTORY / f'{PROJECT_NAME}_1.bat'
 
 FILE_ARCHIVER: Path = WORKING_DIRECTORY / '7za.exe'
 
-SCENARIOS_DATA: Path = WORKING_DIRECTORY / 'data_all'
+SCENARIOS_DATA: Path = WORKING_DIRECTORY / 'data_all' / f'data_{PROJECT_NAME}'
 CONDOR_OUTPUT_FOLDER: Path = Path(r'out\cell')
 
 # Name of GLOBIOM file variable from which the scenarios for running G4M are taken
 VARIABLE: str = 'LandRent'
-CSV_FILE: Path = SCENARIOS_DATA / f'data_{PROJECT_NAME}' / f'GLOBIOM2G4M_output_{VARIABLE}_{PROJECT_NAME}.csv'
+CSV_FILE: Path = SCENARIOS_DATA / f'GLOBIOM2G4M_output_{VARIABLE}_{PROJECT_NAME}.csv'
 
 # USER: str = 'gusti'
 USER: str = 'denys'
 UPDATE_TIME: int = 60
 
-JOB_TEMPLATE: dict[str, str | int] = {
+JOB_TEMPLATE: dict[str, str | int | list] = {
     'notification': 'Error',
     'job_machine_attrs': 'Machine',
     'job_machine_attrs_history_length': 5,
@@ -50,8 +50,10 @@ JOB_TEMPLATE: dict[str, str | int] = {
     'periodic_release': '(NumJobStarts <= 10) && (HoldReasonCode != 1) && ((time() - EnteredCurrentStatus) > 300)',
     'job_lease_duration': 7200,
     'on_exit_remove': '(ExitBySignal == False) && (ExitCode == 0)',
-    'on_exit_hold': '(NumJobStarts > 10) && (ExitCode != 0)'
+    'on_exit_hold': '(NumJobStarts > 10) && (ExitCode != 0)',
 }
 
 MERGE_EXE: Path = WORKING_DIRECTORY / 'tableMerge_EPA_csv_linker_new.exe'
 MERGE_OUT: Path = WORKING_DIRECTORY / 'merged'
+
+GDX_PATH: Path = WORKING_DIRECTORY / r'AEO2022/32052022/GLOBIOM/output_globiom4g4mm_AEO2022_31052022.gdx'
